@@ -6,3 +6,4 @@ gem 'mina'
 gem 'mina-sidekiq'
 
 gem 'sidekiq'
+gem 'rack', '1.6.4'
