@@ -30,6 +30,8 @@ set :identity_file, '/Users/masahiroiuchi/bitbucket/mina-sample/.vagrant/machine
 
 set :shared_dirs, fetch(:shared_dirs, []).push('pids')
 
+set :sidekiq_config, -> { "#{fetch(:current_path)}/config/sidekiq_test.yml" }
+
 # This task is the environment that is loaded all remote run commands, such as
 # `mina deploy` or `mina rake`.
 task :environment do
