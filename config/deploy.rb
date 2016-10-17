@@ -1,7 +1,7 @@
 require 'mina/rails'
 require 'mina/git'
 require 'mina_sidekiq/tasks'
-# require 'mina/rbenv'  # for rbenv support. (https://rbenv.org)
+require 'mina/rbenv'  # for rbenv support. (https://rbenv.org)
 # require 'mina/rvm'    # for rvm support. (https://rvm.io)
 
 # Basic settings:
@@ -34,7 +34,7 @@ set :identity_file, '/Users/masahiroiuchi/bitbucket/mina-sample/.vagrant/machine
 task :environment do
   # If you're using rbenv, use this to load the rbenv environment.
   # Be sure to commit your .ruby-version or .rbenv-version to your repository.
-  # invoke :'rbenv:load'
+  invoke :'rbenv:load'
 
   # For those using RVM, use this to load an RVM version@gemset.
   # invoke :'rvm:use', 'ruby-1.9.3-p125@default'
