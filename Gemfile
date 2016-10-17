@@ -46,6 +46,7 @@ group :development do
 end
 
 gem 'sidekiq'
+gem 'therubyracer'
 
 gem 'mina'
 gem 'mina-sidekiq'

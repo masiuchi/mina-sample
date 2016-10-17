@@ -22,12 +22,13 @@ set :branch, 'master'
 
 set :user, 'vagrant'
 set :port, '2222'
-# set :identity_file, "/Users/masahiroiuchi/.vagrant.d/insecure_private_key"
 set :identity_file, '/Users/masahiroiuchi/bitbucket/mina-sample/.vagrant/machines/default/virtualbox/private_key'
 
 # They will be linked in the 'deploy:link_shared_paths' step.
 # set :shared_dirs, fetch(:shared_dirs, []).push('config')
 # set :shared_files, fetch(:shared_files, []).push('config/database.yml', 'config/secrets.yml')
+
+set :shared_dirs, fetch(:shared_dirs, []).push('pids')
 
 # This task is the environment that is loaded all remote run commands, such as
 # `mina deploy` or `mina rake`.
