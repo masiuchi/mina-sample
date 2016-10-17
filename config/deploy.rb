@@ -1,5 +1,6 @@
 require 'mina/rails'
 require 'mina/git'
+require 'mina_sidekiq/tasks'
 # require 'mina/rbenv'  # for rbenv support. (https://rbenv.org)
 # require 'mina/rvm'    # for rvm support. (https://rvm.io)
 
@@ -60,6 +61,7 @@ task :deploy do
     invoke :'deploy:cleanup'
 
     on :launch do
+      invoke :'sidekiq:restart'
       in_path(fetch(:current_path)) do
         command %{mkdir -p tmp/}
         command %{touch tmp/restart.txt}
