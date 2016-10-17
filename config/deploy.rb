@@ -11,7 +11,7 @@ require 'mina/git'
 
 set :domain, 'trusty64.local'
 set :deploy_to, '/home/vagrant/test'
-set :repository, 'https://github.com/masiuchi/rack-conditional'
+set :repository, 'https://github.com/masiuchi/mina-sample'
 set :branch, 'master'
 
 # Optional settings:
@@ -55,8 +55,8 @@ task :deploy do
     invoke :'git:clone'
     invoke :'deploy:link_shared_paths'
     invoke :'bundle:install'
-    invoke :'rails:db_migrate'
-    invoke :'rails:assets_precompile'
+    # invoke :'rails:db_migrate'
+    # invoke :'rails:assets_precompile'
     invoke :'deploy:cleanup'
 
     on :launch do
