@@ -10,7 +10,7 @@ require 'mina_sidekiq/tasks'
 #   repository   - Git repo to clone from. (needed by mina/git)
 #   branch       - Branch name to deploy. (needed by mina/git)
 
-set :domain, 'trusty64.local'
+set :domains, %w[vm1.local vm2.local]
 set :deploy_to, '/home/vagrant/test'
 set :repository, 'https://github.com/masiuchi/mina-sample'
 set :branch, 'master'
@@ -22,7 +22,7 @@ set :branch, 'master'
 
 set :user, 'vagrant'
 set :port, '2222'
-set :identity_file, '/Users/masahiroiuchi/github/mina-sample/.vagrant/machines/default/virtualbox/private_key'
+set :identity_file, '/Users/masahiroiuchi/github/mina-sample/.vagrant/machines/vm1/virtualbox/private_key'
 
 # They will be linked in the 'deploy:link_shared_paths' step.
 # set :shared_dirs, fetch(:shared_dirs, []).push('config')
@@ -47,6 +47,18 @@ end
 # All paths in `shared_dirs` and `shared_paths` will be created on their own.
 task :setup do
   # command %{rbenv install 2.3.0}
+end
+
+desc "setup to all servers"
+task :setup_all do
+  isolate do
+    domains.each do |domain|
+      puts "SETUP:DOMAIN:"+domain
+      set :domain, domain
+      invoke :setup
+      run!
+    end
+  end
 end
 
 desc "Deploys the current version to the server."
@@ -77,6 +89,30 @@ task :deploy do
 
   # you can use `run :local` to run tasks on local machine before of after the deploy scripts
   # run :local { say 'done' }
+end
+
+desc "Deploy to all servers"
+task :deploy_all do
+  Dir::glob("app/**/*.rb").each {|f|
+    if File.read(f).include?("binding.pry")
+      puts "binding.pry is found. ===> #{f}  deploy?  (y/n)"
+      input = STDIN.gets
+      if input.include?("n")
+        exit 1
+      end
+    end
+  }
+  puts "BRANCH:"+branch
+  isolate do
+    domains.each do |domain|
+      set :domain, domain
+      puts "DOMAIN:"+domain
+      # puts "ENV:"+ envv
+      # puts "ROLES:" + (HOSTNAME_ROLES[domain] || []).join(',')
+      invoke :deploy
+      run!
+    end
+  end
 end
 
 # For help in making your deploy script, see the Mina documentation:
