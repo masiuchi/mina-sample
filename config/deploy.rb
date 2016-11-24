@@ -22,7 +22,7 @@ set :branch, 'master'
 
 set :user, 'vagrant'
 set :port, '2222'
-set :identity_file, '/Users/masahiroiuchi/bitbucket/mina-sample/.vagrant/machines/default/virtualbox/private_key'
+set :identity_file, '/Users/masahiroiuchi/github/mina-sample/.vagrant/machines/default/virtualbox/private_key'
 
 # They will be linked in the 'deploy:link_shared_paths' step.
 # set :shared_dirs, fetch(:shared_dirs, []).push('config')
@@ -58,7 +58,7 @@ task :deploy do
     # instance of your project.
     invoke :'git:clone'
     invoke :'deploy:link_shared_paths'
-    invoke :'bundle:install'
+    # invoke :'bundle:install'
     # invoke :'rails:db_migrate'
     # invoke :'rails:assets_precompile'
     invoke :'deploy:cleanup'
@@ -68,6 +68,9 @@ task :deploy do
       in_path(fetch(:current_path)) do
         command %{mkdir -p tmp/}
         command %{touch tmp/restart.txt}
+
+        command %{touch test1}
+        command %{touch test2}
       end
     end
   end
