@@ -50,3 +50,5 @@ gem 'therubyracer'
 
 gem 'mina'
 gem 'mina-sidekiq'
+
+gem 'rack', '1.6.5'
