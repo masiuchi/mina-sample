@@ -10,6 +10,7 @@ require 'mina/git'
 #   branch       - Branch name to deploy. (needed by mina/git)
 
 set :domains, %w[vm1.local vm2.local]
+# set :domains, %w[vm1.local]
 # set :domains, %w[vm2.local]
 set :deploy_to, '/home/vagrant/test'
 set :repository, 'https://github.com/masiuchi/mina-sample'
@@ -76,18 +77,22 @@ task :deploy do
     # invoke :'rails:db_migrate'
     # invoke :'rails:assets_precompile'
     invoke :'deploy:cleanup'
+
+    invoke :test
   end
 
   # you can use `run :local` to run tasks on local machine before of after the deploy scripts
   # run :local { say 'done' }
 end
 
-task :test123 do
-  queue %[echo test123]
-end
-
-task :test456 do
-  queue %[echo test456]
+task :test do
+  queue %[
+    if [ $HOSTNAME = "vm1" ]; then
+      echo vm1.local
+    else
+      echo vm2.local
+    fi
+  ]
 end
 
 desc "Deploy to all servers"
@@ -112,11 +117,6 @@ task :deploy_all do
       end
       puts "DOMAIN:"+domain
       invoke :deploy
-      if domain.match(/vm1/)
-        invoke :test123
-      else
-        invoke :test456
-      end
       run!
     end
   end
