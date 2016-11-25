@@ -1,6 +1,5 @@
 require 'mina/rails'
 require 'mina/git'
-require 'mina_sidekiq/tasks'
 # require 'mina/rbenv'  # for rbenv support. (https://rbenv.org)
 # require 'mina/rvm'    # for rvm support. (https://rvm.io)
 
@@ -29,8 +28,7 @@ set :identity_file, '/Users/masahiroiuchi/github/mina-sample/.vagrant/machines/v
 # set :shared_files, fetch(:shared_files, []).push('config/database.yml', 'config/secrets.yml')
 
 set :shared_dirs, fetch(:shared_dirs, []).push('pids')
-
-set :sidekiq_config, -> { "#{fetch(:current_path)}/config/sidekiq_test.yml" }
+set :shared_paths, ['pids']
 
 # This task is the environment that is loaded all remote run commands, such as
 # `mina deploy` or `mina rake`.
@@ -76,7 +74,6 @@ task :deploy do
     invoke :'deploy:cleanup'
 
     on :launch do
-      # invoke :'sidekiq:restart'
       in_path(fetch(:current_path)) do
         command %{mkdir -p tmp/}
         command %{touch tmp/restart.txt}
