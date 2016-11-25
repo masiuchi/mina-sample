@@ -77,19 +77,11 @@ task :deploy do
     # invoke :'rails:assets_precompile'
     invoke :'deploy:cleanup'
 
-    to :launch do
+    if domain == 'vm1.local'
       invoke :test123
+    else
+      invoke :test456
     end
-
-#    to :launch do
-#      in_path(fetch(:current_path)) do
-#        command %{mkdir -p tmp/}
-#        command %{touch tmp/restart.txt}
-#
-#        command %{touch test1}
-#        command %{touch test2}
-#      end
-#    end
   end
 
   # you can use `run :local` to run tasks on local machine before of after the deploy scripts
@@ -97,7 +89,11 @@ task :deploy do
 end
 
 task :test123 do
-  puts 123
+  queue %[echo test123]
+end
+
+task :test456 do
+  queue %[echo test456]
 end
 
 desc "Deploy to all servers"
