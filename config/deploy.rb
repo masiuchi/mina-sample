@@ -76,12 +76,6 @@ task :deploy do
     # invoke :'rails:db_migrate'
     # invoke :'rails:assets_precompile'
     invoke :'deploy:cleanup'
-
-    if domain == 'vm1.local'
-      invoke :test123
-    else
-      invoke :test456
-    end
   end
 
   # you can use `run :local` to run tasks on local machine before of after the deploy scripts
@@ -118,6 +112,11 @@ task :deploy_all do
       end
       puts "DOMAIN:"+domain
       invoke :deploy
+      if domain.match(/vm1/)
+        invoke :test123
+      else
+        invoke :test456
+      end
       run!
     end
   end
