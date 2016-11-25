@@ -10,6 +10,7 @@ require 'mina/git'
 #   branch       - Branch name to deploy. (needed by mina/git)
 
 set :domains, %w[vm1.local vm2.local]
+# set :domains, %w[vm2.local]
 set :deploy_to, '/home/vagrant/test'
 set :repository, 'https://github.com/masiuchi/mina-sample'
 set :branch, 'master'
@@ -20,8 +21,6 @@ set :branch, 'master'
 #   set :forward_agent, true     # SSH forward_agent.
 
 set :user, 'vagrant'
-set :port, '2222'
-set :identity_file, '/Users/masahiroiuchi/github/mina-sample/.vagrant/machines/vm1/virtualbox/private_key'
 
 # They will be linked in the 'deploy:link_shared_paths' step.
 # set :shared_dirs, fetch(:shared_dirs, []).push('config')
@@ -53,6 +52,11 @@ task :setup_all do
     domains.each do |domain|
       puts "SETUP:DOMAIN:"+domain
       set :domain, domain
+      if domain.match(/vm1/)
+        set :identity_file, '/Users/masahiroiuchi/github/mina-sample/.vagrant/machines/vm1/virtualbox/private_key'
+      else
+        set :identity_file, '/Users/masahiroiuchi/github/mina-sample/.vagrant/machines/vm2/virtualbox/private_key'
+      end
       invoke :setup
       run!
     end
@@ -73,19 +77,27 @@ task :deploy do
     # invoke :'rails:assets_precompile'
     invoke :'deploy:cleanup'
 
-    on :launch do
-      in_path(fetch(:current_path)) do
-        command %{mkdir -p tmp/}
-        command %{touch tmp/restart.txt}
-
-        command %{touch test1}
-        command %{touch test2}
-      end
+    to :launch do
+      invoke :test123
     end
+
+#    to :launch do
+#      in_path(fetch(:current_path)) do
+#        command %{mkdir -p tmp/}
+#        command %{touch tmp/restart.txt}
+#
+#        command %{touch test1}
+#        command %{touch test2}
+#      end
+#    end
   end
 
   # you can use `run :local` to run tasks on local machine before of after the deploy scripts
   # run :local { say 'done' }
+end
+
+task :test123 do
+  puts 123
 end
 
 desc "Deploy to all servers"
@@ -103,9 +115,12 @@ task :deploy_all do
   isolate do
     domains.each do |domain|
       set :domain, domain
+      if domain.match(/vm1/)
+        set :identity_file, '/Users/masahiroiuchi/github/mina-sample/.vagrant/machines/vm1/virtualbox/private_key'
+      else
+        set :identity_file, '/Users/masahiroiuchi/github/mina-sample/.vagrant/machines/vm2/virtualbox/private_key'
+      end
       puts "DOMAIN:"+domain
-      # puts "ENV:"+ envv
-      # puts "ROLES:" + (HOSTNAME_ROLES[domain] || []).join(',')
       invoke :deploy
       run!
     end
