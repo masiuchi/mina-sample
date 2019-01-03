@@ -30,6 +30,8 @@ set :user, 'vagrant'
 set :shared_dirs, fetch(:shared_dirs, []).push('pids')
 set :shared_paths, ['pids']
 
+pwd = Dir.pwd
+
 # This task is the environment that is loaded all remote run commands, such as
 # `mina deploy` or `mina rake`.
 task :environment do
@@ -54,9 +56,9 @@ task :setup_all do
       puts "SETUP:DOMAIN:"+domain
       set :domain, domain
       if domain.match(/vm1/)
-        set :identity_file, '/Users/masahiroiuchi/github/mina-sample/.vagrant/machines/vm1/virtualbox/private_key'
+        set :identity_file, "#{pwd}/.vagrant/machines/vm1/virtualbox/private_key"
       else
-        set :identity_file, '/Users/masahiroiuchi/github/mina-sample/.vagrant/machines/vm2/virtualbox/private_key'
+        set :identity_file, "#{pwd}/.vagrant/machines/vm2/virtualbox/private_key"
       end
       invoke :setup
       run!
@@ -111,9 +113,9 @@ task :deploy_all do
     domains.each do |domain|
       set :domain, domain
       if domain.match(/vm1/)
-        set :identity_file, '/Users/masahiroiuchi/github/mina-sample/.vagrant/machines/vm1/virtualbox/private_key'
+        set :identity_file, "#{pwd}/.vagrant/machines/vm1/virtualbox/private_key"
       else
-        set :identity_file, '/Users/masahiroiuchi/github/mina-sample/.vagrant/machines/vm2/virtualbox/private_key'
+        set :identity_file, "#{pwd}/.vagrant/machines/vm2/virtualbox/private_key"
       end
       puts "DOMAIN:"+domain
       invoke :deploy
